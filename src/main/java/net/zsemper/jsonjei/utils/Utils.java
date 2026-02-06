@@ -1,5 +1,8 @@
 package net.zsemper.jsonjei.utils;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -113,5 +116,17 @@ public final class Utils {
                 default -> LEFT;
             };
         }
+    }
+
+    public static JsonObject backgroundDefault() {
+        return JsonParser.parseString("""
+                {
+                    "texture": "json_jei:textures/gui/default",
+                    "x": 0,
+                    "y": 0,
+                    "width": 64,
+                    "height": 64
+                }
+                """).getAsJsonObject();
     }
 }

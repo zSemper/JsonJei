@@ -41,24 +41,26 @@ public class JeiRecipeCategory implements IRecipeCategory<JeiRecipe> {
     private final Component title;
     private final IDrawable icon;
     private final IDrawable background;
+    private final boolean recipeBorder;
     private final JsonArray recipeBlocks;
     private final JsonObject recipe;
     private final JsonArray rendering;
 
     public JeiRecipeCategory(JsonObject object, IGuiHelper guiHelper) {
         this.uid = Utils.validate(GsonUtils.getAsString(object, JsonKey.UID));
-        this.title = Component.translatable(GsonUtils.getAsString(object, JsonKey.TITLE));
+        this.title = Component.translatable(GsonUtils.getAsString(object, JsonKey.TITLE, "json_jei.default.title"));
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, getIcon(object));
-        JsonObject backgroundObject = GsonUtils.getAsJsonObject(object, JsonKey.BACKGROUND);
+        JsonObject backgroundObject = GsonUtils.getAsJsonObject(object, JsonKey.BACKGROUND, Utils.backgroundDefault());
         this.background = guiHelper.createDrawable(
-                Utils.validateFile(GsonUtils.getAsString(backgroundObject, JsonKey.TEXTURE), "png"),
-                GsonUtils.getAsInt(backgroundObject, JsonKey.X),
-                GsonUtils.getAsInt(backgroundObject, JsonKey.Y),
-                GsonUtils.getAsInt(backgroundObject, JsonKey.WIDTH),
-                GsonUtils.getAsInt(backgroundObject, JsonKey.HEIGHT)
+                Utils.validateFile(GsonUtils.getAsString(backgroundObject, JsonKey.TEXTURE, "json_jei:textures/gui/default"), "png"),
+                GsonUtils.getAsInt(backgroundObject, JsonKey.X, 0),
+                GsonUtils.getAsInt(backgroundObject, JsonKey.Y, 0),
+                GsonUtils.getAsInt(backgroundObject, JsonKey.WIDTH, 64),
+                GsonUtils.getAsInt(backgroundObject, JsonKey.HEIGHT, 64)
         );
+        this.recipeBorder = GsonUtils.getAsBoolean(object, JsonKey.RECIPE_BORDER, true);
         this.recipeBlocks = GsonUtils.getAsJsonArray(object, JsonKey.RECIPE_ITEMS, null);
-        this.recipe = GsonUtils.getAsJsonObject(object, JsonKey.RECIPE);
+        this.recipe = GsonUtils.getAsJsonObject(object, JsonKey.RECIPE, null);
         this.rendering = GsonUtils.getAsJsonArray(object, JsonKey.RENDERING, null);
     }
 
@@ -106,80 +108,85 @@ public class JeiRecipeCategory implements IRecipeCategory<JeiRecipe> {
     @Override
     public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull JeiRecipe jeiRecipe, @NotNull IFocusGroup focuses) {
         ResourceLocation id = jeiRecipe.getId();
-        JsonArray inputs = GsonUtils.getAsJsonArray(recipe, JsonKey.INPUT, null);
+        if (recipe != null){
+            JsonArray inputs = GsonUtils.getAsJsonArray(recipe, JsonKey.INPUT, null);
 
-        if (inputs != null) {
-            for (JsonElement inputEntry : inputs) {
-                JsonObject object = inputEntry.getAsJsonObject();
+            if (inputs != null) {
+                for (JsonElement inputEntry : inputs) {
+                    JsonObject object = inputEntry.getAsJsonObject();
 
-                String key = GsonUtils.getAsString(object, JsonKey.KEY, null);
-                int x = GsonUtils.getAsInt(object, JsonKey.X, 0);
-                int y = GsonUtils.getAsInt(object, JsonKey.Y, 0);
+                    String key = GsonUtils.getAsString(object, JsonKey.KEY, null);
+                    int x = GsonUtils.getAsInt(object, JsonKey.X, 0);
+                    int y = GsonUtils.getAsInt(object, JsonKey.Y, 0);
 
-                if (key != null) {
-                    String type = GsonUtils.getAsString(object, JsonKey.TYPE, null);
-                    switch (type) {
-                        case JsonKey.ITEM -> {
-                            List<ItemStack> output = jeiRecipe.getItemInputs(key);
-                            if (!output.isEmpty()) {
-                                builder.addInputSlot(x, y).addIngredients(VanillaTypes.ITEM_STACK, output);
+                    if (key != null) {
+                        String type = GsonUtils.getAsString(object, JsonKey.TYPE, null);
+                        switch (type) {
+                            case JsonKey.ITEM -> {
+                                List<ItemStack> output = jeiRecipe.getItemInputs(key);
+                                if (!output.isEmpty()) {
+                                    builder.addInputSlot(x, y).addIngredients(VanillaTypes.ITEM_STACK, output);
+                                }
                             }
-                        }
-                        case JsonKey.FLUID -> {
-                            int capacity = GsonUtils.getAsInt(object, JsonKey.CAPACITY, 1);
-                            boolean showTooltip = GsonUtils.getAsBoolean(object, JsonKey.SHOW_TOOLTIP, false);
-                            int width = GsonUtils.getAsInt(object, JsonKey.WIDTH, 16);
-                            int height = GsonUtils.getAsInt(object, JsonKey.HEIGHT, 16);
+                            case JsonKey.FLUID -> {
+                                int capacity = GsonUtils.getAsInt(object, JsonKey.CAPACITY, 1);
+                                boolean showTooltip = GsonUtils.getAsBoolean(object, JsonKey.SHOW_TOOLTIP, false);
+                                int width = GsonUtils.getAsInt(object, JsonKey.WIDTH, 16);
+                                int height = GsonUtils.getAsInt(object, JsonKey.HEIGHT, 16);
 
-                            List<FluidStack> output = jeiRecipe.getFluidInputs(key);
-                            if (!output.isEmpty()) {
-                                builder.addInputSlot(x, y).addIngredients(NeoForgeTypes.FLUID_STACK, output).setFluidRenderer(capacity, showTooltip, width, height);
+                                List<FluidStack> output = jeiRecipe.getFluidInputs(key);
+                                if (!output.isEmpty()) {
+                                    builder.addInputSlot(x, y).addIngredients(NeoForgeTypes.FLUID_STACK, output).setFluidRenderer(capacity, showTooltip, width, height);
+                                }
                             }
+                            case null -> LOGGER.warn("Missing ingredient type for input slot {} in recipe {}", key, id);
+                            default ->
+                                    LOGGER.warn("Unknown ingredient type {} for input slot {} in recipe {}", type, key, id);
                         }
-                        case null -> LOGGER.warn("Missing ingredient type for input slot {} in recipe {}", key, id);
-                        default -> LOGGER.warn("Unknown ingredient type {} for input slot {} in recipe {}", type, key, id);
+                    } else {
+                        LOGGER.warn("Failed to create input ingredient slot because 'key' is null.");
                     }
-                } else {
-                    LOGGER.warn("Failed to create input ingredient slot because 'key' is null.");
                 }
             }
-        }
 
-        JsonArray outputs = GsonUtils.getAsJsonArray(recipe, JsonKey.OUTPUT, null);
-        if (outputs != null) {
-            for (JsonElement outputEntry : outputs) {
-                JsonObject object = outputEntry.getAsJsonObject();
+            JsonArray outputs = GsonUtils.getAsJsonArray(recipe, JsonKey.OUTPUT, null);
+            if (outputs != null) {
+                for (JsonElement outputEntry : outputs) {
+                    JsonObject object = outputEntry.getAsJsonObject();
 
-                String key = GsonUtils.getAsString(object, JsonKey.KEY, null);
-                int x = GsonUtils.getAsInt(object, JsonKey.X, 0);
-                int y = GsonUtils.getAsInt(object, JsonKey.Y, 0);
+                    String key = GsonUtils.getAsString(object, JsonKey.KEY, null);
+                    int x = GsonUtils.getAsInt(object, JsonKey.X, 0);
+                    int y = GsonUtils.getAsInt(object, JsonKey.Y, 0);
 
-                if (key != null) {
-                    String type = GsonUtils.getAsString(object, JsonKey.TYPE, null);
-                    switch (type) {
-                        case JsonKey.ITEM -> {
-                            ItemStack output = jeiRecipe.getItemOutput(key);
-                            if (output != ItemStack.EMPTY) {
-                                builder.addOutputSlot(x, y).addIngredient(VanillaTypes.ITEM_STACK, output);
+                    if (key != null) {
+                        String type = GsonUtils.getAsString(object, JsonKey.TYPE, null);
+                        switch (type) {
+                            case JsonKey.ITEM -> {
+                                ItemStack output = jeiRecipe.getItemOutput(key);
+                                if (output != ItemStack.EMPTY) {
+                                    builder.addOutputSlot(x, y).addIngredient(VanillaTypes.ITEM_STACK, output);
+                                }
                             }
-                        }
-                        case JsonKey.FLUID -> {
-                            int capacity = GsonUtils.getAsInt(object, JsonKey.CAPACITY, 1);
-                            boolean showTooltip = GsonUtils.getAsBoolean(object, JsonKey.SHOW_TOOLTIP, false);
-                            int width = GsonUtils.getAsInt(object, JsonKey.WIDTH, 16);
-                            int height = GsonUtils.getAsInt(object, JsonKey.HEIGHT, 16);
+                            case JsonKey.FLUID -> {
+                                int capacity = GsonUtils.getAsInt(object, JsonKey.CAPACITY, 1);
+                                boolean showTooltip = GsonUtils.getAsBoolean(object, JsonKey.SHOW_TOOLTIP, false);
+                                int width = GsonUtils.getAsInt(object, JsonKey.WIDTH, 16);
+                                int height = GsonUtils.getAsInt(object, JsonKey.HEIGHT, 16);
 
-                            FluidStack output = jeiRecipe.getFluidOutput(key);
-                            if (output != FluidStack.EMPTY) {
-                                builder.addOutputSlot(x, y).addIngredient(NeoForgeTypes.FLUID_STACK, output).setFluidRenderer(capacity, showTooltip, width, height);
+                                FluidStack output = jeiRecipe.getFluidOutput(key);
+                                if (output != FluidStack.EMPTY) {
+                                    builder.addOutputSlot(x, y).addIngredient(NeoForgeTypes.FLUID_STACK, output).setFluidRenderer(capacity, showTooltip, width, height);
+                                }
+
                             }
-
+                            case null ->
+                                    LOGGER.warn("Missing ingredient type for output slot {} in recipe {}", key, id);
+                            default ->
+                                    LOGGER.warn("Unknown ingredient type {} for output slot {} in recipe {}", type, key, id);
                         }
-                        case null -> LOGGER.warn("Missing ingredient type for output slot {} in recipe {}", key, id);
-                        default -> LOGGER.warn("Unknown ingredient type {} for output slot {} in recipe {}", type, key, id);
+                    } else {
+                        LOGGER.warn("Failed to create output ingredient slot because 'key' is null.");
                     }
-                } else {
-                    LOGGER.warn("Failed to create output ingredient slot because 'key' is null.");
                 }
             }
         }
@@ -244,8 +251,13 @@ public class JeiRecipeCategory implements IRecipeCategory<JeiRecipe> {
         }
     }
 
+    @Override
+    public boolean needsRecipeBorder() {
+        return recipeBorder;
+    }
+
     private ItemStack getIcon(JsonObject object) {
-        ResourceLocation itemKey = ResourceLocation.parse(GsonUtils.getAsString(object, JsonKey.ICON));
+        ResourceLocation itemKey = ResourceLocation.parse(GsonUtils.getAsString(object, JsonKey.ICON, "minecraft:barrier"));
         return new ItemStack(Objects.requireNonNullElse(BuiltInRegistries.ITEM.get(itemKey), Items.BARRIER));
     }
 

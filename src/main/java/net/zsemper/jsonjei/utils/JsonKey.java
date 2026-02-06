@@ -15,6 +15,7 @@ public final class JsonKey {
     public static final String TITLE = "title";
     public static final String ICON = "icon";
     public static final String BACKGROUND = "background";
+    public static final String RECIPE_BORDER = "recipe_border";
     public static final String RECIPE = "recipe";
     public static final String RENDERING = "rendering";
     public static final String RECIPE_ITEMS = "recipe_items";
