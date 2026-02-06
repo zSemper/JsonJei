@@ -1,0 +1,31 @@
+modLoader="javafml"
+loaderVersion="1.21.1"
+license="MIT License"
+
+[[mods]]
+modId="json_jei"
+version="1.0.0"
+displayName="Json Jei"
+description='''
+Allow custom jei categories and recipes via datapacks and resourcepacks
+'''
+[[dependencies.json_jei]]
+    modId="neoforge"
+    type="required"
+    versionRange="[21.1.65,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.json_jei]]
+    modId="minecraft"
+    type="required"
+    versionRange="[1.21.1]"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.json_jei]]
+    modId="jei"
+    type="required"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
