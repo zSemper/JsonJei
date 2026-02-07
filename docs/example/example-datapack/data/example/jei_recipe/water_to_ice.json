@@ -1,0 +1,10 @@
+{
+  "type": "example:freezing",
+  "cooling": {
+    "fluid": "minecraft:water",
+    "amount": 1000
+  },
+  "output": {
+    "item": "minecraft:ice"
+  }
+}

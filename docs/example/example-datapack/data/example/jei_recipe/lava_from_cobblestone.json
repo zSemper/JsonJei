@@ -1,0 +1,11 @@
+{
+  "type": "example:melting",
+  "melting_material": {
+    "tag": "c:cobblestones",
+    "count": 2
+  },
+  "output": {
+    "fluid": "minecraft:lava",
+    "amount": 250
+  }
+}

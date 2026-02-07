@@ -1,0 +1,42 @@
+{
+  "uid": "example:melting",
+  "title": "Melting",
+  "icon": "minecraft:magma_block",
+  "background": {
+    "texture": "example:textures/gui/jei",
+    "width": 90,
+    "height": 36,
+    "u": 0,
+    "v": 0
+  },
+  "recipe_items": [
+    "minecraft:magma_block",
+    "minecraft:lava_bucket"
+  ],
+  "recipe": {
+    "input": [
+      {
+        "type": "item",
+        "key": "melting_material",
+        "x": 1,
+        "y": 19
+      },
+      {
+        "type": "fluid",
+        "key": "heating_material",
+        "x": 37,
+        "y": 1
+      }
+    ],
+    "output": [
+      {
+        "type": "fluid",
+        "key": "output",
+        "x": 73,
+        "y": 19,
+        "show_tooltip": true,
+        "capacity": 8000
+      }
+    ]
+  }
+}

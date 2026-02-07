@@ -1,0 +1,57 @@
+{
+  "uid": "example:freezing",
+  "title": "jei.example.freezing",
+  "icon": "minecraft:ice",
+  "background": {
+    "texture": "example:texures/gui/jei",
+    "width": 90,
+    "height": 36,
+    "u": 0,
+    "v": 0
+  },
+  "recipe_items": [
+    "minecraft:ice",
+    "minecraft:packed_ice",
+    "minecraft:blue_ice"
+  ],
+  "recipe": {
+    "input": [
+      {
+        "type": "item",
+        "key": "coolant",
+        "x": 37,
+        "y": 1
+      },
+      {
+        "type": "fluid",
+        "key": "cooling",
+        "x": 1,
+        "y": 19
+      }
+    ],
+    "output": [
+      {
+        "type": "item",
+        "key": "output",
+        "x": 73,
+        "y": 19
+      }
+    ]
+  },
+  "rendering": [
+    {
+      "type": "texture",
+      "key": "progress",
+      "default": {
+        "texture": "example:texures/gui/progress_arrow",
+        "width": 40,
+        "height": 16,
+        "u": 0,
+        "v": 0,
+        "x": 25,
+        "y": 18,
+        "time": 100
+      }
+    }
+  ]
+}

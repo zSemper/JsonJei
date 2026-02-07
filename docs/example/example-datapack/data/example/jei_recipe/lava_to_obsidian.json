@@ -1,0 +1,24 @@
+{
+  "type": "example:freezing",
+  "cooling": {
+    "fluid": "minecraft:lava",
+    "amount": 1000
+  },
+  "coolant": {
+    "item": "minecraft:packed_ice",
+    "count": 8
+  },
+  "output": {
+    "item": "minecraft:obsidian"
+  },
+  "progress": {
+    "texture": "example:gui/progress_arrow",
+    "width": 40,
+    "height": 16,
+    "u": 0,
+    "v": 0,
+    "x": 25,
+    "y": 18,
+    "time": 1000
+  }
+}

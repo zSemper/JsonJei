@@ -1,0 +1,13 @@
+{
+  "type": "example:freezing",
+  "coolant": {
+    "item": "minecraft:ice"
+  },
+  "cooling": {
+    "fluid": "minecraft:water",
+    "amount": 1000
+  },
+  "output": {
+    "item": "minecraft:packed_ice"
+  }
+}

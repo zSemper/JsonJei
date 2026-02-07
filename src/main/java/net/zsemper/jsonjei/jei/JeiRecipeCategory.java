@@ -42,7 +42,7 @@ public class JeiRecipeCategory implements IRecipeCategory<JeiRecipe> {
     private final IDrawable icon;
     private final IDrawable background;
     private final boolean recipeBorder;
-    private final JsonArray recipeBlocks;
+    private final JsonArray recipeItems;
     private final JsonObject recipe;
     private final JsonArray rendering;
 
@@ -53,13 +53,13 @@ public class JeiRecipeCategory implements IRecipeCategory<JeiRecipe> {
         JsonObject backgroundObject = GsonUtils.getAsJsonObject(object, JsonKey.BACKGROUND, Utils.backgroundDefault());
         this.background = guiHelper.createDrawable(
                 Utils.validateFile(GsonUtils.getAsString(backgroundObject, JsonKey.TEXTURE, "json_jei:textures/gui/default"), "png"),
-                GsonUtils.getAsInt(backgroundObject, JsonKey.X, 0),
-                GsonUtils.getAsInt(backgroundObject, JsonKey.Y, 0),
+                GsonUtils.getAsInt(backgroundObject, JsonKey.U, 0),
+                GsonUtils.getAsInt(backgroundObject, JsonKey.V, 0),
                 GsonUtils.getAsInt(backgroundObject, JsonKey.WIDTH, 64),
                 GsonUtils.getAsInt(backgroundObject, JsonKey.HEIGHT, 64)
         );
         this.recipeBorder = GsonUtils.getAsBoolean(object, JsonKey.RECIPE_BORDER, true);
-        this.recipeBlocks = GsonUtils.getAsJsonArray(object, JsonKey.RECIPE_ITEMS, null);
+        this.recipeItems = GsonUtils.getAsJsonArray(object, JsonKey.RECIPE_ITEMS, null);
         this.recipe = GsonUtils.getAsJsonObject(object, JsonKey.RECIPE, null);
         this.rendering = GsonUtils.getAsJsonArray(object, JsonKey.RENDERING, null);
     }
@@ -74,10 +74,10 @@ public class JeiRecipeCategory implements IRecipeCategory<JeiRecipe> {
     }
 
     public Item[] getRecipeItems() {
-        if (recipeBlocks != null) {
-            Item[] items = new Item[recipeBlocks.size()];
-            for (int i = 0; i < recipeBlocks.size(); i++) {
-                items[i] = Utils.getItem(recipeBlocks.get(i).getAsString());
+        if (recipeItems != null) {
+            Item[] items = new Item[recipeItems.size()];
+            for (int i = 0; i < recipeItems.size(); i++) {
+                items[i] = Utils.getItem(recipeItems.get(i).getAsString());
             }
             return items;
         } else {
@@ -268,9 +268,15 @@ public class JeiRecipeCategory implements IRecipeCategory<JeiRecipe> {
             Component text = Component.translatable(GsonUtils.getAsString(object, JsonKey.TEXT));
             int x = GsonUtils.getAsInt(object, JsonKey.X);
             int y = GsonUtils.getAsInt(object, JsonKey.Y);
-            int color = Integer.decode(GsonUtils.getAsString(object, JsonKey.COLOR, "0xffffff"));
+            int color;
+            try {
+                color = Integer.decode(GsonUtils.getAsString(object, JsonKey.COLOR, "0xffffff"));
+            } catch (NumberFormatException ignored) {
+                color = 0xffffff;
+            }
+            boolean shadow = GsonUtils.getAsBoolean(object, JsonKey.SHADOW, true);
 
-            guiGraphics.drawString(font, text, x, y, color);
+            guiGraphics.drawString(font, text, x, y, color, shadow);
         } else {
             warnRender("Failed to draw text component in recipe '{}', as it does not provide all required properties", id);
         }

@@ -1,0 +1,14 @@
+{
+  "type": "example:melting",
+  "melting_material": {
+    "item": "minecraft:obsidian"
+  },
+  "heating_material": {
+    "fluid": "minecraft:lava",
+    "amount": 250
+  },
+  "output": {
+    "fluid": "minecraft:lava",
+    "amount": 1000
+  }
+}

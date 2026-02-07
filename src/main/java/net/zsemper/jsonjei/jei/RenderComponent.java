@@ -19,7 +19,7 @@ public enum RenderComponent {
     TOOLTIP,
 
     /**
-     * {@code TEXTURE} is a static or animated {@code IDrawable},
+     * {@code TEXTURE} is a static or animated texture
      */
     TEXTURE
 }

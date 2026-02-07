@@ -50,6 +50,7 @@ public final class JsonKey {
 
     // Extra rendering keys
     public static final String COLOR = "color";
+    public static final String SHADOW = "shadow";
     public static final String TIME = "time";
     public static final String START_DIRECTION = "start_direction";
     public static final String INVERTED = "inverted";
