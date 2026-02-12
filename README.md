@@ -1,13 +1,13 @@
 # Json Jei
 
-JsonJei is a mod allowing you to add custom jei categories and recipes via data and resource packs.
+A mod about adding custom jei categories and recipes via data- and resource-packs. Useful for modpack creator to show custom functionalities or recipes inside jei.
 
 ---
 
 ## Categories
 
-Jei uses categories to show different recipes. To create categories the JSON files have to be placed in a specific path: `data/[id]/jei_category`.
-A JSON for a category is made up of three different parts
+Jei uses categories to show different recipes. To create a category the JSON file must be placed in a specific path: `data/[namespace]/jei_category`.
+The JSON for a category is made up of three different parts
 
 1. [Category](docs/entries/category.md)
 
@@ -15,22 +15,22 @@ A JSON for a category is made up of three different parts
 
 3. [Rendering](docs/entries/rendering.md)
 
-Even tho the `jei_category` folder is inside the `data` folder structure, the JSONs inside are not affected by the `/reload` command.
-To reload the categories you have to restart Minecraft.
+Even though the `jei_category` folder is inside the `data` folder structure, the JSONs inside are not affected by the `/reload` command.
+To reload the categories, you have to restart Minecraft.
 
 ## Recipes
 
-Recipe for the categories are not placed inside the `recipe` folder like normal recipes. These custom recipes have to be placed inside the `data/[id]/jei_recipe`
-folder to be registered by the mod. And like normal recipes, custom recipes can also be placed in subfolder inside the `jei_recipe` folder.
+Recipes for the categories are not placed inside the `recipe` folder like normal recipes. These custom recipes have to be placed inside the `data/[namespace]/jei_recipe`
+folder to be registered by the mod.
 
 [Recipes](docs/entries/recipes.md)
 
-Like normal recipes, category specific recipes inside the `jei_recipe` can be reloaded be the `/reload` command.
+Like normal recipes, custom recipes can also be placed in subfolder inside the `jei_recipe` folder and can be reloaded using the `/reload` command.
 
 ---
 ## Example
 
-Under `docs/example` is a working data and resource pack that can be used as reference alongside the documentation.
+Under `docs/example` is a working data- and resource-pack that can be used as reference alongside the documentation.
 
 [Example](docs/example)
 
