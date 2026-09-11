@@ -13,7 +13,6 @@ version = mod_version
 group = mod_group_id
 
 repositories {
-    // Add here additional repositories if required by some of the dependencies below.
     maven {
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
@@ -28,7 +27,6 @@ base {
     archivesName = mod_id
 }
 
-// Mojang ships Java 21 to end users in 1.21.1, so mods should target Java 21.
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 neoForge {
@@ -42,6 +40,7 @@ neoForge {
     runs {
         client {
             client()
+            devLogin = true
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
@@ -124,7 +123,6 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
-// IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
 idea {
     module {
         downloadSources = true

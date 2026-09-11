@@ -1,3 +1,8 @@
 {
-  "json_jei.default.title": "Unset Title"
+  "json_jei.gui.energy": "Energy",
+  "json_jei.gui.fe": "%s FE",
+  "json_jei.gui.fe_capacity": "%s / %s FE",
+  "json_jei.gui.time": "Time",
+  "json_jei.gui.experience": "Experience",
+  "json_jei.gui.xp": "%s XP"
 }
