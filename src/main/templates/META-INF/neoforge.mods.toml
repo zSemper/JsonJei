@@ -4,11 +4,14 @@ license="MIT License"
 
 [[mods]]
 modId="json_jei"
-version="1.1.0"
+version="1.1.1"
 displayName="Json Jei"
 description='''
 Allow custom jei categories and recipes via datapacks and resourcepacks
 '''
+updateJSONURL="https://raw.githubusercontent.com/zSemper/Docs/refs/heads/main/json_jei/neoforge-1.21.1/update.json"
+displayURL="https://github.com/zSemper/Docs/blob/main/json_jei/json_jei.md"
+
 [[dependencies.json_jei]]
     modId="neoforge"
     type="required"

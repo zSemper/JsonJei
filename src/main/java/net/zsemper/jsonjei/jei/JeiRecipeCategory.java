@@ -121,8 +121,8 @@ public class JeiRecipeCategory implements IRecipeCategory<JeiRecipe> {
                     JsonObject object = element.getAsJsonObject();
                     if (!object.has("key")) {
                         object.addProperty("key", key);
-                        renderComponent.render(guiGraphics, object, recipe.getValues(key), (int) mouseX, (int) mouseY);
                     }
+                        renderComponent.render(guiGraphics, object, recipe.getValues(key), (int) mouseX, (int) mouseY);
                 } else {
                     renderComponent.render(guiGraphics, null, recipe.getValues(key), (int) mouseX, (int) mouseY);
                 }
